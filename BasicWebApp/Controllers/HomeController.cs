@@ -28,13 +28,13 @@ namespace BasicWebApp.Controllers
         }
 
 
-        public ActionResult ViewCustomer(string Name, string Telephone)
+        public ActionResult ViewCustomer(Models.Customer postedCustomer)
         {
             Models.Customer customer = new Models.Customer();
 
             customer.Id = Guid.NewGuid().ToString();
-            customer.Name = Name;
-            customer.Telephone = Telephone;
+            customer.Name = postedCustomer.Name;
+            customer.Telephone = postedCustomer.Telephone;
 
             return View(customer);
         }
