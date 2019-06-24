@@ -43,5 +43,15 @@ namespace BasicWebApp.Controllers
         {
             return View();
         }
+
+        public ActionResult CustomerList()
+        {
+            List<Models.Customer> customers = new List<Models.Customer>();
+
+            customers.Add(new Models.Customer() { Name = "Fred", Telephone = "12345" });
+            customers.Add(new Models.Customer() { Name = "Drogon", Telephone = "666" });
+
+            return View(customers);
+        }
     }
 }
