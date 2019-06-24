@@ -3,11 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Runtime.Caching;
 
 namespace BasicWebApp.Controllers
 {
     public class HomeController : Controller
     {
+        ObjectCache cache = MemoryCache.Default;
+        List<Models.Customer> customers;
+
+        public HomeController()
+        {
+            customers = cache["customers"] as List<Models.Customer>;
+            if (customers == null)
+            {
+                customers = new List<Models.Customer>();
+            }
+        }
+
+        public void SaveCache()
+        {
+            cache["customers"] = customers;
+        }
         public ActionResult Index()
         {
             return View();
@@ -43,13 +60,18 @@ namespace BasicWebApp.Controllers
         {
             return View();
         }
+        [HttpPost]
+        public ActionResult AddCustomer(Models.Customer customer)
+        {
+            customer.Id = Guid.NewGuid().ToString();
+            customers.Add(customer);
+            SaveCache();
+
+            return RedirectToAction("CustomerList");
+        }
 
         public ActionResult CustomerList()
         {
-            List<Models.Customer> customers = new List<Models.Customer>();
-
-            customers.Add(new Models.Customer() { Name = "Fred", Telephone = "12345" });
-            customers.Add(new Models.Customer() { Name = "Drogon", Telephone = "666" });
 
             return View(customers);
         }
