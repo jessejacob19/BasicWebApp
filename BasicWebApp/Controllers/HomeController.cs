@@ -16,7 +16,7 @@ namespace BasicWebApp.Controllers
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";
-
+            ViewBag.MySuperProperty = "This is my first App!";
             return View();
         }
 
