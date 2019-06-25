@@ -106,6 +106,35 @@ namespace BasicWebApp.Controllers
             }
         }
 
+        public ActionResult DeleteCustomer(string Id)
+        {
+            Customer customer = customers.FirstOrDefault(c => c.Id == Id);
+
+            if (customer == null)
+            {
+                return HttpNotFound();
+            }
+            else
+            {
+                return View(customer);
+            }
+        }
+        [HttpPost]
+        [ActionName("DeleteCustomer")]
+        public ActionResult ConfirmDeleteCustomer(string Id)
+        {
+            Customer customer = customers.FirstOrDefault(c => c.Id == Id);
+
+            if (customer == null)
+            {
+                return HttpNotFound();
+            }
+            else
+            {
+                customers.Remove(customer);
+                return RedirectToAction("CustomerList");
+            }
+        }
         public ActionResult CustomerList()
         {
 
