@@ -87,13 +87,24 @@ namespace BasicWebApp.Controllers
                 return View(customer);
             }
         }
+        [HttpPost]
+        public ActionResult EditCustomer(Customer customer, string Id)
+        {
+            var customerToEdit = customers.FirstOrDefault(c => c.Id == Id);
 
-        //public ActionResult EditCustomer(Customer customer, string Id)
-        //{
-            //var customerToEdit = customers.FirstOrDefault(c => c.Id == Id);
+            if (customer == null)
+            {
+                return HttpNotFound();
+            }
+            else
+            {
+                customerToEdit.Name = customer.Name;
+                customerToEdit.Telephone = customer.Telephone;
+                SaveCache();
 
-           // if (customer)
-       // }
+                return RedirectToAction("CustomerList");
+            }
+        }
 
         public ActionResult CustomerList()
         {
