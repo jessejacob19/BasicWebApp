@@ -4,20 +4,21 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Runtime.Caching;
+using BasicWebApp.Models;
 
 namespace BasicWebApp.Controllers
 {
     public class HomeController : Controller
     {
         ObjectCache cache = MemoryCache.Default;
-        List<Models.Customer> customers;
+        List<Customer> customers;
 
         public HomeController()
         {
-            customers = cache["customers"] as List<Models.Customer>;
+            customers = cache["customers"] as List<Customer>;
             if (customers == null)
             {
-                customers = new List<Models.Customer>();
+                customers = new List<Customer>();
             }
         }
 
@@ -45,15 +46,18 @@ namespace BasicWebApp.Controllers
         }
 
 
-        public ActionResult ViewCustomer(Models.Customer postedCustomer)
+        public ActionResult ViewCustomer(string id)
         {
-            Models.Customer customer = new Models.Customer();
 
-            customer.Id = Guid.NewGuid().ToString();
-            customer.Name = postedCustomer.Name;
-            customer.Telephone = postedCustomer.Telephone;
-
-            return View(customer);
+            Customer customer = customers.FirstOrDefault(c => c.Id == id);
+            
+            if (customer == null)
+            {
+                return HttpNotFound();
+            } else
+            {
+                return View(customer);
+            }
         }
 
         public ActionResult AddCustomer()
@@ -61,7 +65,7 @@ namespace BasicWebApp.Controllers
             return View();
         }
         [HttpPost]
-        public ActionResult AddCustomer(Models.Customer customer)
+        public ActionResult AddCustomer(Customer customer)
         {
             customer.Id = Guid.NewGuid().ToString();
             customers.Add(customer);
@@ -69,6 +73,27 @@ namespace BasicWebApp.Controllers
 
             return RedirectToAction("CustomerList");
         }
+
+        public ActionResult EditCustomer(string id)
+        {
+            Customer customer = customers.FirstOrDefault(c => c.Id == id);
+
+            if (customer == null)
+            {
+                return HttpNotFound();
+            }
+            else
+            {
+                return View(customer);
+            }
+        }
+
+        //public ActionResult EditCustomer(Customer customer, string Id)
+        //{
+            //var customerToEdit = customers.FirstOrDefault(c => c.Id == Id);
+
+           // if (customer)
+       // }
 
         public ActionResult CustomerList()
         {
